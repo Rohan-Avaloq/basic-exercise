@@ -21,7 +21,7 @@ jobs:
           echo "defaults" > ~/.msmtprc
           echo "account default" >> ~/.msmtprc
           echo "host $SMTP_SERVER" >> ~/.msmtprc
-          echo "port $SMTP_PORT" >> ~/.msmtprc
+          echo "port $SMTP_PORT" >> ~/.msmtprc 
           echo "auth plain" >> ~/.msmtprc
           echo "user $SMTP_USERNAME" >> ~/.msmtprc
           echo "password $SMTP_PASSWORD" >> ~/.msmtprc
