@@ -12,7 +12,7 @@ jobs:
 
       - name: Install msmtp
         run: |
-          sudo apt-get update
+          sudo apt-get update  
           sudo apt-get install -y msmtp
 
       - name: Configure msmtp
