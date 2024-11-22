@@ -73,7 +73,7 @@ jobs:
         id: run_java
         run: |
           echo "Simulating failure..."
-          javac MissingFile.java  # This will fail because MissingFile.java doesn't exist
+          java MissingFile.java  # This will fail because MissingFile.java doesn't exist
 
       - name: Capture error logs
         if: failure()  # This step only runs if any previous step fails
