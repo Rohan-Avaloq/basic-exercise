@@ -47,6 +47,6 @@ jobs:
           curl -s --user "api:${{ secrets.MAILGUN_API_KEY }}" \
             https://api.mailgun.net/v3/${{ secrets.MAILGUN_DOMAIN }}/messages \
             -F from='noreply@${{ secrets.MAILGUN_DOMAIN }}' \
-            -F to='recipient@example.com' \
+            -F to='rohan.walunjkar@avaloq.com' \
             -F subject="$SUBJECT" \
             -F text="$MESSAGE"
