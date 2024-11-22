@@ -58,6 +58,6 @@ jobs:
               $MS_TEAMS_WEBHOOK_URL
           else
             curl -X POST -H "Content-Type: application/json" \
-              -d '{"text": "Build successful for repository: ${{ github.repository }}"}' \
+              -d '{"text": "Build successful for repository: ${{ github.repository }}"}\nError cause: '"$ERROR_MESSAGE"'}' \
               $MS_TEAMS_WEBHOOK_URL
           fi
