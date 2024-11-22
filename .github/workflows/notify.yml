@@ -1,9 +1,7 @@
 name: Java Program Build & Workflow Success/Failure Notification
 
-on:
-  push:
-    branches:
-      - main
+on: push
+    
 
 jobs:
   java-build:
