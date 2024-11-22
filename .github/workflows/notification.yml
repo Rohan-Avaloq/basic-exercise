@@ -27,17 +27,17 @@ jobs:
       #     echo "Compiling the Java program..."
       #     javac HelloWorld.java
 
-      # - name: Run Java program
-      #   run: |
-      #     echo "Running the Java program..."
-      #     java HelloWorld
+      - name: Run Java program
+        run: |
+          echo "Running the Java program..."
+          java HelloWorld
 
       - name: Run Java program
         run: |
           echo "Running the Java program..."
           
 
-      - name: Capture error logs
+      - name: Capture error logs 
         if: failure()  # This step only runs if any previous step fails
         run: |
           echo "Capturing error logs..."
