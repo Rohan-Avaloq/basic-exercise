@@ -15,6 +15,12 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
+
+      - name: Debug file structure (for troubleshooting)
+        run: |
+          echo "Printing the file structure..."
+          pwd  # Print working directory
+          ls -la  # List files to confirm HelloWorld.java exists
       
       - name: Compile Java program
         run: |
