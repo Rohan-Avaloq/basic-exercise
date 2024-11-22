@@ -5,11 +5,11 @@ on:
     branches:
       - main
       - master
+
 env:
   MS_TEAMS_WEBHOOK_URL: https://avaloqgroup.webhook.office.com/webhookb2/acc69694-4513-4770-9275-42f898a52f96@2ba8a4bf-3d7a-478b-b8d1-85cae49436ef/IncomingWebhook/ee99d20a71df4bb7993376f96e8a7427/9be00cee-8615-47cd-acdb-537181146f7d/V2vqRicQ0PbEBM-ImL6GUIwMByEgr2iZbJBdhuJXvNOV41
 
 jobs:
-
   java-build:
     runs-on: ubuntu-latest
     continue-on-error: true  # Allow the job to continue even if it fails
@@ -17,37 +17,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # - name: Set up JDK 11
-      #   uses: actions/setup-java@v2
-      #   with:
-      #     java-version: '11'
-
-      # - name: Compile Java program
-      #   run: |
-      #     echo "Compiling the Java program..."
-      #     javac HelloWorld.java
-
       - name: Run Java program
+        id: run_java
         run: |
           echo "Running the Java program..."
-          java HelloWorld
-
-      - name: Run Java program
-        run: |
-          echo "Running the Java program..."
+          java HelloWorld 2>&1 | tee result.log  # Capture both stdout and stderr into result.log
           
-
-      - name: Capture error logs 
+      - name: Capture error logs
         if: failure()  # This step only runs if any previous step fails
         run: |
           echo "Capturing error logs..."
           echo "##[error]Java build failed!" >> error.log
-          echo "Error details:" >> error.log
-          tail -n 50 /tmp/runner-errors.log >> error.log  # Capture last 50 lines of errors
-          # Capture the cause from the previous step (compile/run errors)
-          if [ -f /tmp/runner-errors.log ]; then
-            cat /tmp/runner-errors.log >> error.log
-          fi
+          echo "Error details from the Java program:" >> error.log
+          tail -n 50 result.log >> error.log  # Capture the last 50 lines of the result.log
 
   send_notification:
     needs: java-build
