@@ -1,53 +1,53 @@
-name: Send Microsoft Teams Notification
+# name: Send Microsoft Teams Notification
 
-on:
-  push:
-    branches:
-      - main
-      - master
+# on:
+#   push:
+#     branches:
+#       - main
+#       - master
 
-env:
-  MS_TEAMS_WEBHOOK_URL: https://avaloqgroup.webhook.office.com/webhookb2/acc69694-4513-4770-9275-42f898a52f96@2ba8a4bf-3d7a-478b-b8d1-85cae49436ef/IncomingWebhook/ee99d20a71df4bb7993376f96e8a7427/9be00cee-8615-47cd-acdb-537181146f7d/V2vqRicQ0PbEBM-ImL6GUIwMByEgr2iZbJBdhuJXvNOV41
+# env:
+#   MS_TEAMS_WEBHOOK_URL: https://avaloqgroup.webhook.office.com/webhookb2/acc69694-4513-4770-9275-42f898a52f96@2ba8a4bf-3d7a-478b-b8d1-85cae49436ef/IncomingWebhook/ee99d20a71df4bb7993376f96e8a7427/9be00cee-8615-47cd-acdb-537181146f7d/V2vqRicQ0PbEBM-ImL6GUIwMByEgr2iZbJBdhuJXvNOV41
 
-jobs:
-  java-build:
-    runs-on: ubuntu-latest
-    continue-on-error: true  # Allow the job to continue even if it fails
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+# jobs:
+#   java-build:
+#     runs-on: ubuntu-latest
+#     continue-on-error: true  # Allow the job to continue even if it fails
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Run Java program
-        id: run_java
-        run: |
-          echo "Running the Java program..."
-          javac HelloWorld 2>&1 | tee result.log  # Capture both stdout and stderr into result.log
+#       - name: Run Java program
+#         id: run_java
+#         run: |
+#           echo "Running the Java program..."
+#           javac HelloWorld 2>&1 | tee result.log  # Capture both stdout and stderr into result.log
           
-      - name: Capture error logs
-        if: failure()  # This step only runs if any previous step fails
-        run: |
-          echo "Capturing error logs..."
-          echo "##[error]Java build failed!" >> error.log
-          echo "Error details from the Java program:" >> error.log
-          tail -n 50 result.log >> error.log  # Capture the last 50 lines of the result.log
+#       - name: Capture error logs
+#         if: failure()  # This step only runs if any previous step fails
+#         run: |
+#           echo "Capturing error logs..."
+#           echo "##[error]Java build failed!" >> error.log
+#           echo "Error details from the Java program:" >> error.log
+#           tail -n 50 result.log >> error.log  # Capture the last 50 lines of the result.log
 
-  send_notification:
-    needs: java-build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send Teams Notification
-        run: |
-          # Check if the build failed and send the error logs
-          if [ -f error.log ]; then
-            ERROR_MESSAGE=$(cat error.log)
-            curl -X POST -H "Content-Type: application/json" \
-              -d '{"text": "Build failed in repository: ${{ github.repository }}\nError cause: '"$ERROR_MESSAGE"'}' \
-              $MS_TEAMS_WEBHOOK_URL
-          else
-            curl -X POST -H "Content-Type: application/json" \
-              -d '{"text": "Build successful for repository: ${{ github.repository }}"}' \
-              $MS_TEAMS_WEBHOOK_URL
-          fi
+#   send_notification:
+#     needs: java-build
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Send Teams Notification
+#         run: |
+#           # Check if the build failed and send the error logs
+#           if [ -f error.log ]; then
+#             ERROR_MESSAGE=$(cat error.log)
+#             curl -X POST -H "Content-Type: application/json" \
+#               -d '{"text": "Build failed in repository: ${{ github.repository }}\nError cause: '"$ERROR_MESSAGE"'}' \
+#               $MS_TEAMS_WEBHOOK_URL
+#           else
+#             curl -X POST -H "Content-Type: application/json" \
+#               -d '{"text": "Build successful for repository: ${{ github.repository }}"}' \
+#               $MS_TEAMS_WEBHOOK_URL
+#           fi
 
 
 # name: Send Microsoft Teams Notification
@@ -100,3 +100,54 @@ jobs:
 #               -d '{"text": "Build successful for repository: ${{ github.repository }}"}' \
 #               $MS_TEAMS_WEBHOOK_URL
 #           fi
+
+
+name: Send Microsoft Teams Notification
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+env:
+  MS_TEAMS_WEBHOOK_URL: https://avaloqgroup.webhook.office.com/webhookb2/acc69694-4513-4770-9275-42f898a52f96@2ba8a4bf-3d7a-478b-b8d1-85cae49436ef/IncomingWebhook/ee99d20a71df4bb7993376f96e8a7427/9be00cee-8615-47cd-acdb-537181146f7d/V2vqRicQ0PbEBM-ImL6GUIwMByEgr2iZbJBdhuJXvNOV41
+
+jobs:
+  java-build:
+    runs-on: ubuntu-latest
+    continue-on-error: true  # Allow the job to continue even if it fails
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Fail the build intentionally
+        run: |
+          echo "This step will deliberately fail."
+          exit 1  # This will fail the job intentionally
+
+      - name: Capture error logs
+        if: failure()  # This step only runs if any previous step fails
+        run: |
+          echo "Capturing error logs..."
+          echo "##[error]Simulated Java build failed!" >> error.log
+          echo "Error details from the simulated Java program:" >> error.log
+          echo "The build intentionally failed using exit 1." >> error.log
+
+  send_notification:
+    needs: java-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Teams Notification
+        run: |
+          # Check if the build failed and send the error logs
+          if [ -f error.log ]; then
+            ERROR_MESSAGE=$(cat error.log)
+            curl -X POST -H "Content-Type: application/json" \
+              -d '{"text": "Build failed in repository: ${{ github.repository }}\nError cause: '"$ERROR_MESSAGE"'}' \
+              $MS_TEAMS_WEBHOOK_URL
+          else
+            curl -X POST -H "Content-Type: application/json" \
+              -d '{"text": "Build successful for repository: ${{ github.repository }}"}' \
+              $MS_TEAMS_WEBHOOK_URL
+          fi
