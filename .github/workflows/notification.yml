@@ -21,7 +21,7 @@ jobs:
         id: run_java
         run: |
           echo "Running the Java program..."
-          java HelloWorld 2>&1 | tee result.log  # Capture both stdout and stderr into result.log
+          javac HelloWorld 2>&1 | tee result.log  # Capture both stdout and stderr into result.log
           
       - name: Capture error logs
         if: failure()  # This step only runs if any previous step fails
